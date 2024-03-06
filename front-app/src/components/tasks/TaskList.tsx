@@ -1,46 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { ContainerTasks, TaskName } from './newTask.style'
-// import { Container, Section } from './home.styles'
-// import { NewTask } from '../components/tasks/newTask';
-
-// import Header from '../../components/header/header.component';
-// import Tasks from '../../components/tasks/tasks.components';
-// import iconDelete from '../../assets/delete_icon.svg';
-import { Task_Item } from './Task';
+import { useEffect, useState } from 'react';
+import { TaskItem } from './Task';
+import { NewTask } from './newTask';
+import  TaskProps from '../../model/interface'
 import api from '../../service/api';
 
+export const TaskContainer = () => {
 
-interface Task {
-    "id": number,
-    "task": string,
-    // "completed": boolean
-} 
+    const [tasks, setTasks] = useState<TaskProps[]>([]);
 
-
-
-export const TaskList = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    /**
+     * Código que roda toda vez que a página é renderizada
+     */
     useEffect(() => {
         api.get('tasks/').then(response => {
-            setTasks(response.data);
-            console.log(response.data);
+            setTasks(response.data); 
         });
     }, [])
 
-      const handleAddTask = (taskName: string) => {
+    /**
+     * Método que recebe via ImitData o nome da atividade
+     * Cria o objeto e envia os parametros necessarios para o serviço que se comunica com a API
+     * 
+     * @param taskName 
+     */
+    const handleAddTask = (taskName: string) => {
         let newList = [...tasks];
         newList.push({
-            id: tasks.length + 1,
             task: taskName,
-            // description: taskName
+            id: tasks.length + 1,
+            status: false
         });
         setTasks(newList);
         handlerCreateItem(taskName, tasks.length + 1);
-    }
+      }
 
+    /**
+     * Método que recebe via ImitData o ID da atividade
+     * Cria uma lista provisória da LIST que veio da API para atualizar para o usuário
+     * Envia o ID para o serviço que se comunica com a API
+     * 
+     * 
+     * @param taskId 
+     */ 
     const handDeleteTask = (taskId: number) => {
         let newList = [...tasks];
-        console.log(taskId);
         for (var i = 0; i < newList.length; i++) {
             if (newList.hasOwnProperty(i)) {
                 if (newList[i].id === taskId) {
@@ -53,55 +56,45 @@ export const TaskList = () => {
         }
     }
 
-    // const handleUpdate = (taskId: number, taskStatus: boolean, taskDescription: string) => {
-    //     handlerUpdateItem(taskId, taskStatus, taskDescription);
-    // }
+    /**
+     * Método que recebe o ID e Status da atividade que está sendo atualizada <Completa ou Imcompleta>
+     * Envia o ID e Status para o serviço que se comunica com a API
+     * 
+     * @param taskId 
+     * @param taskStatus 
+     */
+    const handleUpdate = (taskId: number, taskStatus: boolean) => {
+        handlerUpdateItem(taskId, taskStatus);
+    }
 
-    // const [filtro, setFiltro] = useState(0);
-    
     return (
         <>  
-              {tasks.map((item) => (
-                    
-             <Task_Item 
+            <NewTask onEnter={handleAddTask}/>
+            {tasks.map((item) => (
+                <TaskItem 
                     key={item.id}
                     item={item}
-            />
-            ))}
+                    onClickDelete={handDeleteTask}
+                    onClickCompleted={handleUpdate}
+                />
+                ))
+            }
         </>
 )};
 
 
 
 
-/**
- * method that creates a task in the API
- * 
- * @param description 
- * @param id 
- */
-function handlerCreateItem(description: string, id: number) {
-    api.post(`tasks/`, {
-        description: description,
-        state: false,
-        id: id
-    })
-        .then(response => {
-            console.log(response);
-        })
-        .catch(error => {
-            console.log(error);
-        });
 
-}
 
 /**
- * Method that delete a task;
+ * Metodo que deleta uma tarefa na API;
  * 
  * @param id 
  */
 function handlerDeleteItem(id: number) {
-    api.delete(`tasks/${id}`, {
+    api.delete(`deletetask/`, {
+        params: { id: id },
     })
         .then(response => {
             console.log(response);
@@ -112,18 +105,17 @@ function handlerDeleteItem(id: number) {
 }
 
 /**
- * Method that update a task;
+ * Metodo que atualiza uma tarefa na API
  * 
  * @param id 
  * @param status 
  * @param description 
  */
-function handlerUpdateItem(id: number, status: boolean, description: string) {
+function handlerUpdateItem(id: number, status: boolean) {
 
-    api.put(`tasks/${id}`, {
-        description: description,
-        state: !status,
-        id: id
+    api.put(`updatetask/`, {
+        id: id,
+        status: status
     })
         .then(response => {
             console.log(response);
@@ -136,5 +128,22 @@ function handlerUpdateItem(id: number, status: boolean, description: string) {
 
 
 
-
+/**
+ * metodo que cria uma tarefa na API
+ * 
+ * @param description 
+ * @param id 
+ */
+function handlerCreateItem(description: string, id: number) {
+  api.post(`newtask/`, {
+      task: description,
+      status: false,
+  })
+      .then(response => {
+          console.log(response);
+      })
+      .catch(error => {
+          console.log(error);
+      });
+}
 

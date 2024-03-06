@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 interface task {
     id: number,
     task: string,
-    complet: boolean
+    status: boolean
 }
 
 const tasks: task[] = [];
@@ -46,7 +46,7 @@ export const listTasks = (req: Request<{}, {}, task>, res: Response) => {
  * @returns 
  */
 export const checkTask = (req: Request<{}, {}, task>, res: Response) => {
-    updateTask(req.body.id);
+    updateTask(req.body.id, req.body.status);
     
     return res.json(tasks);
 };
@@ -59,7 +59,7 @@ export const checkTask = (req: Request<{}, {}, task>, res: Response) => {
  * @returns 
  */
 export const removeTask = (req: Request<{}, {}, task>, res: Response) => {
-    deleteTask(req.body.id);
+    deleteTask(Number(req.query.id));
     
     return res.json(tasks);
 };
@@ -71,10 +71,10 @@ export const removeTask = (req: Request<{}, {}, task>, res: Response) => {
  * @param id 
  * @returns 
  */
-function updateTask(id: number){
+function updateTask(id: number, status: boolean){
     tasks.forEach((item, index) => {
         if(item.id == id){
-            item.task = 'ATUALIZADO'
+            item.status = status
             return true;
         }
     });

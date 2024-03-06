@@ -8,7 +8,7 @@ export const router = Router();
 /**
  * Rota para saber se está OK o service!
  */
-router.get('/', (req, res) => res.send('API EXPRESS AND TYPESCRIPT'))
+router.get('/', (req, res) => res.send('API TO TASKS - CRUD - FUNCIONANDO'))
 
 /**
  * ROTAS

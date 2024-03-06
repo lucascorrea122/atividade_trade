@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+interface TaskProp {
+  status: boolean;
+}
+
 export const ContainerTasks = styled.div`
     display: flex;
     justify-content: space-between;
@@ -11,20 +15,27 @@ export const ContainerTasks = styled.div`
     margin-bottom: 1rem;
 `
 
-export const TaskName = styled.p`
+export const TaskName = styled.p<TaskProp>`
     color: #c5aeff;
     cursor: pointer;
+    text-decoration: ${props => props.status ?  'line-through' : 'initial'};
+`
+export const DivTaskBox = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 export const Container = styled.form`
   background: var(--blue);
 `;
 
+export const HiddenCheckbox = styled.input.attrs({type: 'checkbox'})``;
+
 export const Content = styled.div`
   max-width: 1120px;
   margin: 0 auto;
 
-  padding: 6rem 1rem 12rem;
+  padding: 2rem 1rem 6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -69,5 +80,16 @@ export const Content = styled.div`
     & + input {
       margin-top: 1rem;
     }
+  }
+
+
+  @media (max-width: 600px) {
+    display: grid;
+    justify-content: center;
+
+    input{
+      width: 100%;
+    }
+    
   }
 `;

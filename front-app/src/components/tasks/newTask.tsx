@@ -1,42 +1,51 @@
-// import { FormEvent, useState } from 'react';
-// import { useNotes } from '../../hooks/useNotes';
 
-import { Container, Content } from './newTask.style'
+import { Container, Content } from './Task.component.style'
+import { useState } from 'react';
 
-export function NewTask() {
-//   const { createNote } = useNotes();
+type Props = {
+  onEnter: (taskName: string) => void
+}
 
-//   const [title, setTitle] = useState('');
-//   const [completed, setCompleted] = useState(false);
+export const NewTask = ({ onEnter }: Props) => {
 
-//   async function handleCreateNewNote(event: FormEvent) {
-//     event.preventDefault()
-//     if (!title.trim()) return
+const [inputText, setInputText] = useState('');
 
-//     await createNote({ title, completed })
-//     setCompleted(false)
-//     setTitle('')
-//   };
+const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+
+  if(event.code === 'Enter' && inputText !== '') {
+    // add task
+    onEnter(inputText);
+    // clear form after submission
+    setInputText('');
+  }
+};
+
+const handleSubmit = (event: any) => {
+  // prevent default action
+  event.preventDefault();
+  if (inputText) {
+    // add task
+    onEnter(inputText);
+    // clear form after submission
+    setInputText('');
+  }
+};
 
   return (
     <Container >
       <Content>
-
-        <header>toDo</header>
-
-        <input
-          placeholder="Title"
-          value={'d'}
-        //   onChange={event => setTitle(event.target.value)}
-        />
-
-        <button
-          type="submit"
-        >
-          New note
-        </button>
-
+        <header>Task System</header>
+          <input
+            type="text"
+            placeholder="Adicione uma tarefa"
+            value={inputText}
+            onChange={e=>setInputText(e.target.value)}
+            onKeyUp={handleKeyDown}
+          />
+          <button onClick={handleSubmit}> Add Task </button>
       </Content>
-    </Container>
+     </Container>
   )
 }
+
+

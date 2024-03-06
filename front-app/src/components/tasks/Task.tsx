@@ -1,40 +1,50 @@
-import React from 'react';
-import { ContainerTasks, TaskName } from './newTask.style'
-// import { Container, Section } from './home.styles'
-// import { NewTask } from '../components/tasks/newTask';
-
-// import Header from '../../components/header/header.component';
-// import Tasks from '../../components/tasks/tasks.components';
+import { useState } from 'react';
+import { ContainerTasks, DivTaskBox, HiddenCheckbox, TaskName } from './Task.component.style'
 import iconDelete from '../../assets/delete_icon.svg';
+import  TaskProps from '../../model/interface'
 
-
-interface Task {
-    "id": number,
-    "task": string,
-    // "completed": boolean
-} 
 
 type Props = {
-    item: Task,
-   
+    item: TaskProps,
+    onClickDelete: (taskId: number) => void,
+    onClickCompleted: (taskId: number, taskStatus: boolean) => void
 }
 
-export const Task_Item = ({ item}: Props) => {
+export const TaskItem = ({ item, onClickDelete, onClickCompleted}: Props) => {
+    const [checked, setChecked] = useState(item.status);
+    const handleSubmit = (event: any) => {
+        // prevent default action
+        event.preventDefault();
+        onClickDelete(item.id)
+      };
     
+      const handlerUpdate = (taskId: number, taskStatus: boolean) => {
+            setChecked(!checked);
+            onClickCompleted(taskId, taskStatus);
+      }
+
     return (
         <ContainerTasks > 
-            <TaskName> {item.task}</TaskName>
-            <>
+            <DivTaskBox>
+            
+            <HiddenCheckbox 
+                checked={checked}
+                onChange={e => handlerUpdate(item.id, e.target.checked)}
+            />
+            <TaskName  
+                status={checked}> 
+                {item.task} 
+            </ TaskName>
+            </ DivTaskBox>
                 <button>
                         <img 
                             src={iconDelete} 
                             alt="delete icon"
                             style={{ width: '15px' }}
+                            onClick={handleSubmit}
                         />
 
                 </button>
-            </>
-
         </ContainerTasks>
     )
 }
