@@ -1,9 +1,8 @@
 import styled from 'styled-components';
-// import BannerHeaderDark from '../home/bg-desktop-dark.jpg';
+// import BannerHeaderDark from '../assets/bg-desktop-dark.jpg';
 // import BannerHeaderLight from "../../../assets/bg-desktop-light.jpg";
 
 export const HeaderBanner = styled.div`
-  /* background-image: url('bg-desktop-dark.jpg'); */
   width: 100%;
   height: 300px;
   position: absolute;
@@ -21,7 +20,7 @@ export const Section = styled.div`
 
 export const Container = styled.div`
   height: 100%;
-  width: 450px;
+  width: 90%;
   margin-top: 50px;
   padding: 0 20px 0 20px;
 `;
