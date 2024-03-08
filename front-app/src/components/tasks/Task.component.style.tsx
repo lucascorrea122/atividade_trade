@@ -4,7 +4,7 @@ interface TaskProp {
   status: boolean;
 }
 
-export const ContainerTasks = styled.div`
+export const ContainerTask = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,6 +30,14 @@ export const Container = styled.form`
 `;
 
 export const HiddenCheckbox = styled.input.attrs({type: 'checkbox'})``;
+
+export const ContainerTasks = styled.div`
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #fff;
+  }
+`
 
 export const Content = styled.div`
   max-width: 1120px;

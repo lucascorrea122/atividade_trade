@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ContainerTasks, DivTaskBox, HiddenCheckbox, TaskName } from './Task.component.style'
+import { ContainerTask, DivTaskBox, HiddenCheckbox, TaskName } from './Task.component.style'
 import iconDelete from '../../assets/delete_icon.svg';
 import  TaskProps from '../../model/interface'
 
@@ -24,7 +24,7 @@ export const TaskItem = ({ item, onClickDelete, onClickCompleted}: Props) => {
       }
 
     return (
-        <ContainerTasks > 
+        <ContainerTask > 
             <DivTaskBox>
             
             <HiddenCheckbox 
@@ -45,6 +45,6 @@ export const TaskItem = ({ item, onClickDelete, onClickCompleted}: Props) => {
                         />
 
                 </button>
-        </ContainerTasks>
+        </ContainerTask>
     )
 }

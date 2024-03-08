@@ -3,10 +3,12 @@ import { TaskItem } from './Task';
 import { NewTask } from './newTask';
 import  TaskProps from '../../model/interface'
 import api from '../../service/api';
+import { ContainerTasks } from './Task.component.style';
 
 export const TaskContainer = () => {
 
     const [tasks, setTasks] = useState<TaskProps[]>([]);
+    const [checked, setChecked] = useState(false);
 
     /**
      * Código que roda toda vez que a página é renderizada
@@ -15,7 +17,13 @@ export const TaskContainer = () => {
         api.get('tasks/').then(response => {
             setTasks(response.data); 
         });
-    }, [])
+    },[])
+
+    useEffect(() => {
+        api.get('tasks/').then(response => {
+            setTasks(response.data); 
+        });
+    },[checked])
 
     /**
      * Método que recebe via ImitData o nome da atividade
@@ -64,22 +72,35 @@ export const TaskContainer = () => {
      * @param taskStatus 
      */
     const handleUpdate = (taskId: number, taskStatus: boolean) => {
+        const auxChecked = !checked;
         handlerUpdateItem(taskId, taskStatus);
+        setChecked(auxChecked)
     }
 
     return (
-        <>  
+        <ContainerTasks>  
             <NewTask onEnter={handleAddTask}/>
-            {tasks.map((item) => (
+            {tasks.map((item) => (item.status === false &&
                 <TaskItem 
                     key={item.id}
                     item={item}
                     onClickDelete={handDeleteTask}
                     onClickCompleted={handleUpdate}
                 />
-                ))
+                    ))
             }
-        </>
+
+            <h1>Tarefas Concluídas</h1>
+            {tasks.map((item) => (item.status === true &&
+                <TaskItem 
+                    key={item.id}
+                    item={item}
+                    onClickDelete={handDeleteTask}
+                    onClickCompleted={handleUpdate}
+                />
+                    ))
+            }
+        </ ContainerTasks>
 )};
 
 
@@ -123,7 +144,6 @@ function handlerUpdateItem(id: number, status: boolean) {
         .catch(error => {
             console.log(error);
         });
-
 }
 
 
